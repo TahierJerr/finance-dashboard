@@ -1,7 +1,7 @@
 import { ArrowUp, ArrowDown, RotateCcw } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Transaction } from "@/lib/generated/prisma"
+import type { Transaction } from "@prisma/client"
 
 interface TransactionListProps {
   title: string
