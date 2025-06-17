@@ -23,7 +23,7 @@ export default async function FinanceDashboard() {
 
 
     
-    const currentDate = new Date("2025-06-15")
+    const currentDate = new Date()
     const currentMonth = currentDate.toISOString().slice(0, 7)
     
     // Calculate monthly summaries for current month
