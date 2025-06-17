@@ -1,7 +1,21 @@
-import { ArrowUp, ArrowDown, RotateCcw } from "lucide-react"
+"use client"
+
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { ArrowUp, ArrowDown, RotateCcw, MoreVertical } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import type { Transaction } from "@prisma/client"
+import axios from "axios"
+import { toast } from "sonner"
 
 interface TransactionListProps {
   title: string
@@ -41,6 +55,20 @@ export function TransactionList({ title, description, transactions, showRecurrin
         return "Custom"
       default:
         return interval
+    }
+  }
+
+  const router = useRouter()
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this transaction?")) return
+    try {
+      await axios.delete(`/api/transaction/${id}`)
+      toast.success("Transaction deleted")
+      router.refresh()
+    } catch (error) {
+      console.error("Delete error", error)
+      toast.error("Failed to delete transaction")
     }
   }
 
@@ -92,15 +120,41 @@ export function TransactionList({ title, description, transactions, showRecurrin
                     <p className="text-sm text-gray-500 dark:text-gray-400">{formatDate(transaction.date)}</p>
                   </div>
                 </div>
-                <div
-                  className={`font-semibold ${
-                    transaction.type === "INCOME"
-                      ? "text-green-600 dark:text-green-400"
-                      : "text-red-600 dark:text-red-400"
-                  }`}
-                >
-                  {transaction.type === "INCOME" ? "+" : "-"}
-                  {formatCurrency(transaction.amount)}
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`font-semibold ${
+                      transaction.type === "INCOME"
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-red-600 dark:text-red-400"
+                    }`}
+                  >
+                    {transaction.type === "INCOME" ? "+" : "-"}
+                    {formatCurrency(transaction.amount)}
+                  </div>
+                  {showRecurringOnly && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-6 w-6">
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem asChild>
+                          <Link href={`/dashboard/transactions/${transaction.id}`}>View</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href={`/dashboard/transactions/${transaction.id}/edit`}>Edit</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => handleDelete(transaction.id)}
+                          variant="destructive"
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
               </div>
             ))}
