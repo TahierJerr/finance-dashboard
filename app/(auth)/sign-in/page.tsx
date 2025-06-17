@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
-import { SignInForm } from "@/components/auth/sing-in-form";
+import { SignInForm } from "@/components/auth/sign-in-form";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
