@@ -1,4 +1,4 @@
-import { Transaction } from "@/lib/generated/prisma";
+import type { Transaction } from "@prisma/client";
 import axios from "axios"
 
 
