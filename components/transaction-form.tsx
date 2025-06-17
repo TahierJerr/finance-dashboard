@@ -191,30 +191,3 @@ export function TransactionForm({ onTransactionAdded }: TransactionFormProps) {
         </div>
     )
 }
-
-// Helper functions for date formatting
-function formatDateToDDMMYYYY(date: Date): string {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-}
-
-function parseDateFromDDMMYYYY(dateStr: string): Date | undefined {
-    if (!dateStr) return undefined;
-    
-    // Handle both DD-MM-YYYY and DD/MM/YYYY formats
-    const parts = dateStr.split(/[-\/]/);
-    if (parts.length !== 3) return undefined;
-    
-    const [day, month, year] = parts.map(Number);
-    if (!day || !month || !year) return undefined;
-    
-    // Create date with explicit year, month (0-based), day
-    const date = new Date(year, month - 1, day);
-    
-    // Validate the date
-    if (isNaN(date.getTime())) return undefined;
-    
-    return date;
-}
